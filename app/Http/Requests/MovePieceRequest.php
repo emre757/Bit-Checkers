@@ -12,7 +12,7 @@ class MovePieceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,12 +24,12 @@ class MovePieceRequest extends FormRequest
     {
         return [
             'from' => ['required', 'array', 'min:1'],
-            'from.column' => ['required', 'integer', 'min:0'],
-            'from.row' => ['required', 'integer', 'min:0'],
+            'from.column' => ['required', 'integer', 'between:0,9'],
+            'from.row' => ['required', 'integer', 'between:0,9'],
 
             'path' => ['required', 'array', 'min:1'],
-            'path.*.column' => ['required', 'integer', 'min:0'],
-            'path.*.row' => ['required', 'integer', 'min:0'],
+            'path.*.column' => ['required', 'integer', 'between:0,9'],
+            'path.*.row' => ['required', 'integer', 'between:0,9'],
         ];
     }
 }

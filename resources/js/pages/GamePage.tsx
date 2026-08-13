@@ -64,11 +64,11 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
     }
 
     return (
-        <div>
+        <div className={'flex flex-col items-center'}>
             <p>Game: {game.id}</p>
             <p>Current player: {game.current_player}</p>
             <p>Status: {game.status}</p>
-            <div className="grid w-fit grid-cols-10 gap-0.5">
+            <div className="mt-5 grid w-fit grid-cols-10 gap-0.5">
                 {game.board.flat().map((square) => {
                     const isSelected =
                         selectedSquare?.row === square.row &&

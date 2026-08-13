@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SaveGameAction;
 use App\Domain\Checkers\Rules\LegalMoveGenerator;
 use App\Domain\Services\GameService;
 use App\Http\Requests\MovePieceRequest;
@@ -15,7 +16,8 @@ final class GameController extends Controller
 
 
     public function __construct(
-        private readonly GameService $gameService,
+        private readonly GameService    $gameService,
+        private readonly SaveGameAction $saveGameAction,
     )
     {
     }
@@ -43,5 +45,9 @@ final class GameController extends Controller
         $data = $request->validated();
         $gameState = GameStateMapper::fromGame($game);
         $gameState->makeMove($data);
+
+        $this->saveGameAction->execute($game, $gameState);
+
+        return to_route('games.show', $game);
     }
 }

@@ -21,9 +21,11 @@ final readonly class LegalMoveGenerator
         }
 
         /**
-         * @var list<Move> $moves
+         * @var list<Move> $normalMoves
+         * @var list<Move> $captureMoves
          */
-        $moves = [];
+        $normalMoves = [];
+        $captureMoves = [];
 
         foreach ($squares as $row) {
             foreach ($row as $square) {
@@ -49,21 +51,62 @@ final readonly class LegalMoveGenerator
                     $nextPosition = new Position($nextRow, $nextColumn);
                     $nextSquare = $board->getSquare($nextPosition);
 
-                    // TODO: check if piece can be captured or not
+                    /** @var Position|null $capturePosition */
+                    $capturePosition = null;
+
+                    // check for any possible captures
                     if ($nextSquare->isOccupied()) {
+                        $nextPiece = $nextSquare->getPiece();
+                        if ($nextPiece === null || $nextPiece->getColor() === $currentPlayer) {
+                            continue;
+                        }
+
+                        $landingRow = $nextRow + $rowStep;
+                        $landingColumn = $nextColumn + $columnStep;
+
+                        if (!Position::isWithinBounds($landingRow, $landingColumn)) {
+                            continue;
+                        }
+
+                        $landingPosition = new Position(
+                            row: $landingRow,
+                            column: $landingColumn,
+                        );
+
+                        $landingSquare = $board->getSquare($landingPosition);
+
+                        if ($landingSquare->isOccupied()) {
+                            continue;
+                        }
+
+                        // first put next position to capture position as this is where enemy piece is
+                        // then put landing/destination position as nextPosition so it can be used in path when creating move class
+                        $capturePosition = $nextPosition;
+                        $nextPosition = $landingPosition;
+                    }
+
+                    // if theres a capture available, put in capturemoves
+                    if ($capturePosition !== null) {
+                        $captureMoves[] = new Move(
+                            from: $squarePosition,
+                            path: [$nextPosition], // $nextPosition changes to landingPosition if there is a piece
+                            capture: $capturePosition,
+                        );
+
                         continue;
                     }
 
-                    $moves[] = new Move(
+                    $normalMoves[] = new Move(
                         from: $squarePosition,
-                        path: [$nextPosition],
-                        captures: [],
+                        path: [$nextPosition], // $nextPosition changes to landingPosition if there is a piece
+                        capture: $capturePosition,
                     );
                 }
             }
         }
 
-        return $moves;
+        // only return moves with capture if one exists
+        return $captureMoves !== [] ? $captureMoves : $normalMoves;
     }
 
     /**

@@ -6,12 +6,11 @@ final readonly class Move
 {
     /**
      * @param non-empty-list<Position> $path
-     * @param list<Position> $captures
      */
     public function __construct(
-        public Position $from,
-        public array    $path, // array of positions due to multi conquer
-        public array    $captures, // array of pieces captured when performing
+        public Position  $from,
+        public array     $path, // array of positions due to multi conquer
+        public ?Position $capture, // array of pieces captured when performing
     )
     {
         if ($path === []) {
@@ -28,13 +27,11 @@ final readonly class Move
         return $this->path[count($this->path) - 1];
     }
 
-    // if any pieces are captured throughout move
-    public function isCapture(): bool
-    {
-        return count($this->captures) > 0;
-    }
-
     // meant to validate client input; if it matches a valid move
+
+    /**
+     * @param list<Position> $path
+     */
     public function matches(Position $from, array $path): bool
     {
         if (!$this->from->equals($from) || count($this->path) !== count($path)) {
@@ -54,7 +51,7 @@ final readonly class Move
      * @return array{
      *     from: array{row: int, column: int},
      *     path: list<array{row: int, column: int}>,
-     *     captures: list<array{row: int, column: int}>
+     *     capture: array{row: int, column: int}|null,
      * }
      */
     public function toArray(): array
@@ -71,13 +68,10 @@ final readonly class Move
                 ],
                 $this->path,
             ),
-            'captures' => array_map(
-                fn(Position $position): array => [
-                    'row' => $position->row,
-                    'column' => $position->column,
-                ],
-                $this->captures,
-            ),
+            'capture' => $this->capture === null ? null : [
+                'row' => $this->capture->row,
+                'column' => $this->capture->column,
+            ],
         ];
     }
 }
