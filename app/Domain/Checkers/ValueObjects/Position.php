@@ -32,4 +32,25 @@ final readonly class Position
         return $this->row === $other->row
             && $this->column === $other->column;
     }
+
+    /**
+     * @return array{row: int, column: int}
+     */
+    public function toArray(): array
+    {
+        return [
+            'row' => $this->row,
+            'column' => $this->column,
+        ];
+    }
+
+    /** @param array{
+     * row: int,
+     * column: int
+     * } $data
+     */
+    public static function fromArray(array $data): self
+    {
+        return new self($data['row'], $data['column']);
+    }
 }

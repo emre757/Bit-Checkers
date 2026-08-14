@@ -20,7 +20,7 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
                       move.from.row === selectedSquare.row &&
                       move.from.column === selectedSquare.column,
               )
-              .map((move) => move.path[move.path.length - 1])
+              .map((move) => move.destination)
               .filter(
                   (position): position is Position => position !== undefined,
               )
@@ -29,7 +29,7 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
     function handleBoxClick(row: number, column: number) {
         const clickedMove = selectedSquare
             ? legalMoves.find((move) => {
-                  const destination = move.path[move.path.length - 1];
+                  const destination = move.destination;
 
                   const startsAtSelectedSquare =
                       move.from.row === selectedSquare.row &&
@@ -48,7 +48,7 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
                 `/games/${game.id}/moves`,
                 {
                     from: clickedMove.from,
-                    path: clickedMove.path,
+                    destination: clickedMove.destination,
                 },
                 {
                     onSuccess: () => setSelectedSquare(null),

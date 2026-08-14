@@ -124,6 +124,16 @@ final class Board
         return $this->squares;
     }
 
+    public function countPlayerPieces(ColorType $playerColor): int
+    {
+        return collect($this->squares)
+            ->flatten(1) // remove row from array collection
+            ->filter(
+                fn(Square $square) => $square->getPiece()?->getColor() === $playerColor,
+            )
+            ->count();
+    }
+
     /**
      * @return array<int, array<int, array<string, mixed>>>
      */

@@ -21,7 +21,7 @@ export type Position = {
 
 export type LegalMove = {
     from: Position;
-    path: Position[];
+    destination: Position;
     captures: Position[];
 };
 

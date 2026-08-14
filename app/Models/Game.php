@@ -11,12 +11,14 @@ class Game extends Model
         'status',
         'winner',
         'board',
+        'forced_capture_from',
     ];
 
     public function casts(): array
     {
         return [
             'board' => 'array',
+            'forced_capture_from' => 'array',
         ];
     }
 }

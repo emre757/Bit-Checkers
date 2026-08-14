@@ -4,11 +4,88 @@ namespace App\Domain\Checkers\Rules;
 
 use App\Domain\Checkers\Board;
 use App\Domain\Checkers\Enums\ColorType;
+use App\Domain\Checkers\Square;
 use App\Domain\Checkers\ValueObjects\Move;
 use App\Domain\Checkers\ValueObjects\Position;
 
 final readonly class LegalMoveGenerator
 {
+    /**
+     * @return list<Move>
+     */
+    private static function generateSquareMoves(Board $board, Square $square, ColorType $currentPlayer): array
+    {
+        $squarePiece = $square->getPiece();
+
+        if (!$squarePiece || $squarePiece->getColor() !== $currentPlayer) {
+            return [];
+        }
+
+        $squarePosition = $square->getPosition();
+        $rowStep = $currentPlayer->forwardRowStep();
+
+        $moves = [];
+
+        // foreach -1, 1 because these are the 2 directions (left & right), so create & loop 2 possibilities
+        foreach ([-1, 1] as $columnStep) {
+            $nextRow = $squarePosition->row + $rowStep;
+            $nextColumn = $squarePosition->column + $columnStep;
+
+            // validate position
+            if (!Position::isWithinBounds($nextRow, $nextColumn)) {
+                continue;
+            }
+
+            $nextPosition = new Position($nextRow, $nextColumn);
+            $nextSquare = $board->getSquare($nextPosition);
+
+            /** @var Position|null $capturePosition */
+            $capturePosition = null;
+
+            // check for any possible captures
+            if ($nextSquare->isOccupied()) {
+                $nextPiece = $nextSquare->getPiece();
+                if ($nextPiece === null || $nextPiece->getColor() === $currentPlayer) {
+                    continue;
+                }
+
+                $landingRow = $nextRow + $rowStep;
+                $landingColumn = $nextColumn + $columnStep;
+
+                if (!Position::isWithinBounds($landingRow, $landingColumn)) {
+                    continue;
+                }
+
+                $landingPosition = new Position(
+                    row: $landingRow,
+                    column: $landingColumn,
+                );
+
+                $landingSquare = $board->getSquare($landingPosition);
+
+                if ($landingSquare->isOccupied()) {
+                    continue;
+                }
+
+                // first put next position to capture position as this is where enemy piece is
+                // then put landing/destination position as nextPosition so it can be used in path when creating move class
+                $capturePosition = $nextPosition;
+                $nextPosition = $landingPosition;
+            }
+
+            // if theres a capture available, put in capturemoves
+            $moves[] = new Move(
+                from: $squarePosition,
+                destination: $nextPosition, // $nextPosition changes to landingPosition if there is a piece
+                capture: $capturePosition,
+            );
+        }
+
+        return $moves;
+    }
+
+    // Function should not be used freely, use gamestate legalmoves() instead
+
     /**
      * @return list<Move>
      */
@@ -29,84 +106,36 @@ final readonly class LegalMoveGenerator
 
         foreach ($squares as $row) {
             foreach ($row as $square) {
-                $squarePiece = $square->getPiece();
+                $moves = self::generateSquareMoves($board, $square, $currentPlayer);
 
-                if (!$squarePiece || $squarePiece->getColor() !== $currentPlayer) {
-                    continue;
-                }
-
-                $squarePosition = $square->getPosition();
-                $rowStep = $currentPlayer->forwardRowStep();
-
-                // foreach -1, 1 because these are the 2 directions (left & right), so create & loop 2 possibilities
-                foreach ([-1, 1] as $columnStep) {
-                    $nextRow = $squarePosition->row + $rowStep;
-                    $nextColumn = $squarePosition->column + $columnStep;
-
-                    // validate position
-                    if (!Position::isWithinBounds($nextRow, $nextColumn)) {
+                foreach ($moves as $move) {
+                    if ($move->capture !== null) {
+                        $captureMoves[] = $move;
                         continue;
                     }
 
-                    $nextPosition = new Position($nextRow, $nextColumn);
-                    $nextSquare = $board->getSquare($nextPosition);
-
-                    /** @var Position|null $capturePosition */
-                    $capturePosition = null;
-
-                    // check for any possible captures
-                    if ($nextSquare->isOccupied()) {
-                        $nextPiece = $nextSquare->getPiece();
-                        if ($nextPiece === null || $nextPiece->getColor() === $currentPlayer) {
-                            continue;
-                        }
-
-                        $landingRow = $nextRow + $rowStep;
-                        $landingColumn = $nextColumn + $columnStep;
-
-                        if (!Position::isWithinBounds($landingRow, $landingColumn)) {
-                            continue;
-                        }
-
-                        $landingPosition = new Position(
-                            row: $landingRow,
-                            column: $landingColumn,
-                        );
-
-                        $landingSquare = $board->getSquare($landingPosition);
-
-                        if ($landingSquare->isOccupied()) {
-                            continue;
-                        }
-
-                        // first put next position to capture position as this is where enemy piece is
-                        // then put landing/destination position as nextPosition so it can be used in path when creating move class
-                        $capturePosition = $nextPosition;
-                        $nextPosition = $landingPosition;
-                    }
-
-                    // if theres a capture available, put in capturemoves
-                    if ($capturePosition !== null) {
-                        $captureMoves[] = new Move(
-                            from: $squarePosition,
-                            path: [$nextPosition], // $nextPosition changes to landingPosition if there is a piece
-                            capture: $capturePosition,
-                        );
-
-                        continue;
-                    }
-
-                    $normalMoves[] = new Move(
-                        from: $squarePosition,
-                        path: [$nextPosition], // $nextPosition changes to landingPosition if there is a piece
-                        capture: $capturePosition,
-                    );
+                    $normalMoves[] = $move;
                 }
             }
         }
 
         // only return moves with capture if one exists
         return $captureMoves !== [] ? $captureMoves : $normalMoves;
+    }
+
+    /** @return list<Move> */
+    public static function captureMovesForSquare(Board $board, ColorType $currentPlayer, Square $square): array
+    {
+        $moves = self::generateSquareMoves($board, $square, $currentPlayer);
+        $captureMoves = [];
+
+        foreach ($moves as $move) {
+            if ($move->capture !== null) {
+                $captureMoves[] = $move;
+            }
+        }
+
+        return $captureMoves;
     }
 
     /**

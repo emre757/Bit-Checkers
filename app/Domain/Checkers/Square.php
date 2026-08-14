@@ -21,11 +21,6 @@ final class Square
         return $this->position;
     }
 
-    public function getColor(): ColorType
-    {
-        return $this->color;
-    }
-
     public function getPiece(): ?Piece
     {
         return $this->piece;

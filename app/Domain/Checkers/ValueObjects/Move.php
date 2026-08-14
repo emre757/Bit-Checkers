@@ -4,44 +4,19 @@ namespace App\Domain\Checkers\ValueObjects;
 
 final readonly class Move
 {
-    /**
-     * @param non-empty-list<Position> $path
-     */
     public function __construct(
         public Position  $from,
-        public array     $path, // array of positions due to multi conquer
+        public Position  $destination, // array of positions due to multi conquer
         public ?Position $capture, // array of pieces captured when performing
     )
     {
-        if ($path === []) {
-            throw new \InvalidArgumentException(
-                'A move must have at least one destination.',
-            );
-        }
-    }
-
-    // last pos of $path
-    public function destination(): Position
-    {
-        // cannot use end() because it modifies the readonly path array variable
-        return $this->path[count($this->path) - 1];
     }
 
     // meant to validate client input; if it matches a valid move
-
-    /**
-     * @param list<Position> $path
-     */
-    public function matches(Position $from, array $path): bool
+    public function matches(Position $from, Position $destination): bool
     {
-        if (!$this->from->equals($from) || count($this->path) !== count($path)) {
+        if (!$this->from->equals($from) || !$this->destination->equals($destination)) {
             return false;
-        }
-
-        foreach ($path as $index => $position) {
-            if (!$this->path[$index]->equals($position)) {
-                return false;
-            }
         }
 
         return true;
@@ -61,13 +36,8 @@ final readonly class Move
                 'row' => $this->from->row,
                 'column' => $this->from->column,
             ],
-            'path' => array_map(
-                fn(Position $position): array => [
-                    'row' => $position->row,
-                    'column' => $position->column,
-                ],
-                $this->path,
-            ),
+            'destination' => ['row' => $this->destination->row,
+                'column' => $this->destination->column,],
             'capture' => $this->capture === null ? null : [
                 'row' => $this->capture->row,
                 'column' => $this->capture->column,

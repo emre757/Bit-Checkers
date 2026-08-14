@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('winner')->nullable();
 
             $table->json('board');
+            $table->json('forced_capture_from')->nullable();
 
             $table->timestamps();
         });

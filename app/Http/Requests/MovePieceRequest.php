@@ -23,13 +23,13 @@ class MovePieceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'from' => ['required', 'array', 'min:1'],
+            'from' => ['required', 'array', 'array:row,column'],
             'from.column' => ['required', 'integer', 'between:0,9'],
             'from.row' => ['required', 'integer', 'between:0,9'],
 
-            'path' => ['required', 'array', 'min:1'],
-            'path.*.column' => ['required', 'integer', 'between:0,9'],
-            'path.*.row' => ['required', 'integer', 'between:0,9'],
+            'destination' => ['required', 'array', 'array:row,column'],
+            'destination.column' => ['required', 'integer', 'between:0,9'],
+            'destination.row' => ['required', 'integer', 'between:0,9'],
         ];
     }
 }

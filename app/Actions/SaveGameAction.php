@@ -20,6 +20,7 @@ final class SaveGameAction
             'status' => $gameState->status->value,
             'board' => $gameState->board->toArray(),
             'winner' => $gameState->winner?->value,
+            'forced_capture_from' => $gameState->forcedCaptureFrom?->toArray(),
         ]);
 
         return $game;

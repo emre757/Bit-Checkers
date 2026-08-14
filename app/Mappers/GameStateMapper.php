@@ -8,6 +8,7 @@ use App\Domain\Checkers\Board;
 use App\Domain\Checkers\Enums\BoardStatusType;
 use App\Domain\Checkers\Enums\ColorType;
 use App\Domain\Checkers\GameState;
+use App\Domain\Checkers\ValueObjects\Position;
 use App\Models\Game;
 
 final readonly class GameStateMapper
@@ -22,6 +23,7 @@ final readonly class GameStateMapper
             winner: $game->winner !== null
                 ? ColorType::from($game->winner)
                 : null,
+            forcedCaptureFrom: $game->forced_capture_from !== null ? Position::fromArray($game->forced_capture_from) : null,
         );
     }
 }
