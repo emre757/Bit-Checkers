@@ -24,4 +24,12 @@ enum ColorType: string
             self::Dark => 1,
         };
     }
+
+    public function isPromotionRow(int $row): bool
+    {
+        return $row === match ($this) {
+            self::Light => 0,
+            self::Dark => 9,
+        };
+    }
 }

@@ -7,12 +7,12 @@ use InvalidArgumentException;
 
 final class Piece
 {
+    // private props because it shouldnt be changed by outside codes
     public function __construct(
         private readonly ColorType $color,
-        private bool               $isKing,
-    )
-    {
-        if (!in_array($color, [
+        private bool $isKing,
+    ) {
+        if (! in_array($color, [
             ColorType::Light,
             ColorType::Dark,
         ], true)) {
@@ -25,7 +25,7 @@ final class Piece
         return $this->color;
     }
 
-    public function pieceIsKing(): bool
+    public function isKing(): bool
     {
         return $this->isKing;
     }
@@ -37,7 +37,10 @@ final class Piece
     }
 
     /**
-     * @return array<string, bool>
+     * @return array{
+     *     color: string,
+     *     isKing: bool
+     * }
      */
     public function toArray(): array
     {

@@ -11,15 +11,13 @@ use App\Domain\Checkers\ValueObjects\Position;
 final class GameState
 {
     public function __construct(
-        public readonly int    $gameId,
-        public ColorType       $turn,
+        public readonly int $gameId,
+        public ColorType $turn,
         public BoardStatusType $status,
-        public Board           $board,
-        public ?ColorType      $winner = null,
-        public ?Position       $forcedCaptureFrom = null,
-    )
-    {
-    }
+        public Board $board,
+        public ?ColorType $winner = null,
+        public ?Position $forcedCaptureFrom = null,
+    ) {}
 
     private function declareWinner(ColorType $winningPlayer): void
     {
@@ -32,6 +30,10 @@ final class GameState
      */
     public function legalMoves(): array
     {
+        if ($this->status === BoardStatusType::Inactive) {
+            return [];
+        }
+
         $forcedSquare = null;
 
         if ($this->forcedCaptureFrom !== null) {
@@ -44,39 +46,17 @@ final class GameState
         ) : LegalMoveGenerator::captureMovesForSquare($this->board, $this->turn, $forcedSquare);
     }
 
-    /**
-     * @param array{
-     *     from: array{
-     *         row: int,
-     *         column: int
-     *     },
-     *     destination: array{
-     *          row: int,
-     *          column: int
-     *      },
-     * } $data
-     */
-    public function makeMove(array $data): void
+    public function makeMove(Position $from, Position $destination): void
     {
         if ($this->status !== BoardStatusType::Active) {
             throw new \DomainException('Game status is not active');
         }
 
-        $from = new Position(
-            row: $data['from']['row'],
-            column: $data['from']['column'],
-        );
-
-        $destination = new Position(
-            row: $data['destination']['row'],
-            column: $data['destination']['column'],
-        );
-
         /** @var Move|null $legalMove */
         $legalMove = null;
 
         foreach ($this->legalMoves() as $movePossibility) {
-            if (!$movePossibility->matches($from, $destination)) {
+            if (! $movePossibility->matches($from, $destination)) {
                 continue;
             }
 
@@ -98,15 +78,20 @@ final class GameState
         $piece = $this->board->getSquare($legalMove->from)->removePiece();
         $endSquare->placePiece($piece);
 
-        // TODO: make backward capturing possible
         if ($legalMove->capture !== null) {
             $forcedCaptures = LegalMoveGenerator::captureMovesForSquare($this->board, $this->turn, $endSquare);
 
             // skip switching turns
-            if (!empty($forcedCaptures)) {
+            if (! empty($forcedCaptures)) {
                 $this->forcedCaptureFrom = $endSquare->getPosition();
+
                 return;
             }
+        }
+
+        // only crown at end of turn
+        if (! $piece->isKing() && $piece->getColor()->isPromotionRow($endSquare->getPosition()->row)) {
+            $piece->crown();
         }
 
         // change turn if no capture available & reset forcedcapture

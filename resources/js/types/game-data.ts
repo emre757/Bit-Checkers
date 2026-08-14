@@ -22,7 +22,7 @@ export type Position = {
 export type LegalMove = {
     from: Position;
     destination: Position;
-    captures: Position[];
+    capture: Position | null;
 };
 
 export type LegalMovesData = LegalMove[];

@@ -15,9 +15,7 @@ export default function CheckerPiece({ piece }: CheckerPieceProps) {
             aria-hidden="true"
             className={`flex size-11 items-center justify-center rounded-full border-4 shadow-md ${colorClasses} `}
         >
-            {piece.isKing && (
-                <span className="text-xl leading-none font-bold">♛</span>
-            )}
+            {piece.isKing && <span className="text-xl font-bold">♛</span>}
         </span>
     );
 }

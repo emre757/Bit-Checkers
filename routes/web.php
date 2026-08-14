@@ -20,4 +20,4 @@ Route::post('/games', [GameController::class, 'store'])
 Route::post('/games/{game}/moves', [GameController::class, 'move'])
     ->name('games.moves.store');
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

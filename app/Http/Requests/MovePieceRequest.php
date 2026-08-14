@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Domain\Checkers\ValueObjects\Position;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -31,5 +32,21 @@ class MovePieceRequest extends FormRequest
             'destination.column' => ['required', 'integer', 'between:0,9'],
             'destination.row' => ['required', 'integer', 'between:0,9'],
         ];
+    }
+
+    public function fromPosition(): Position
+    {
+        return new Position(
+            row: $this->integer('from.row'),
+            column: $this->integer('from.column'),
+        );
+    }
+
+    public function destinationPosition(): Position
+    {
+        return new Position(
+            row: $this->integer('destination.row'),
+            column: $this->integer('destination.column'),
+        );
     }
 }

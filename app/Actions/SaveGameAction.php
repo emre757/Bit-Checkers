@@ -4,7 +4,6 @@ namespace App\Actions;
 
 use App\Domain\Checkers\GameState;
 use App\Models\Game;
-
 use LogicException;
 
 final class SaveGameAction

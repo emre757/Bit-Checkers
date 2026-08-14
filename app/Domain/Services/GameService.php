@@ -10,9 +10,7 @@ final class GameService
 {
     public function __construct(
         private readonly BoardService $boardService,
-    )
-    {
-    }
+    ) {}
 
     public function newGame(): Game
     {

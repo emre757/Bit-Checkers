@@ -1,6 +1,7 @@
-import { router } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import CheckerBox from '@/components/checkers/checker-box';
+import { Button } from '@/components/ui/button';
 import { handleSquareClick } from '@/lib/board-client';
 import type { GameData, LegalMovesData, Position } from '@/types/game-data';
 
@@ -11,6 +12,7 @@ type GamePageProps = {
 
 export default function GamePage({ game, legalMoves }: GamePageProps) {
     const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
+    const active = game.status === 'active';
 
     // show potential moves for the selected square
     const legalDestinations: Position[] = selectedSquare
@@ -64,36 +66,51 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
     }
 
     return (
-        <div className={'flex flex-col items-center'}>
-            <p>Game: {game.id}</p>
-            <p>Current player: {game.current_player}</p>
-            <p>Status: {game.status}</p>
-            <div className="mt-5 grid w-fit grid-cols-10 gap-0.5">
-                {game.board.flat().map((square) => {
-                    const isSelected =
-                        selectedSquare?.row === square.row &&
-                        selectedSquare.column === square.column;
+        <>
+            <Button asChild className="mt-5 ml-5">
+                <Link href="/">Go back home</Link>
+            </Button>
+            <div className={'flex flex-col items-center'}>
+                <p>Game: {game.id}</p>
+                <p>Current player: {game.current_player}</p>
+                <p>Status: {game.status}</p>
+                <div className="relative mt-5 grid w-fit grid-cols-10 gap-0.5">
+                    {game.board.flat().map((square) => {
+                        const isSelected =
+                            selectedSquare?.row === square.row &&
+                            selectedSquare.column === square.column;
 
-                    const isLegalDestination = legalDestinations.some(
-                        (position) =>
-                            position.row === square.row &&
-                            position.column === square.column,
-                    );
+                        const isLegalDestination = legalDestinations.some(
+                            (position) =>
+                                position.row === square.row &&
+                                position.column === square.column,
+                        );
 
-                    return (
-                        <CheckerBox
-                            key={`${square.row}-${square.column}`}
-                            color={square.color === 'dark' ? 'black' : 'light'}
-                            piece={square.piece}
-                            selected={isSelected}
-                            legal={isLegalDestination}
-                            onClick={() =>
-                                handleBoxClick(square.row, square.column)
-                            }
-                        />
-                    );
-                })}
+                        return (
+                            <CheckerBox
+                                key={`${square.row}-${square.column}`}
+                                color={
+                                    square.color === 'dark' ? 'black' : 'light'
+                                }
+                                piece={square.piece}
+                                selected={isSelected}
+                                legal={isLegalDestination}
+                                onClick={() =>
+                                    active &&
+                                    handleBoxClick(square.row, square.column)
+                                }
+                            />
+                        );
+                    })}
+                    {!active && (
+                        <div className="absolute top-1/2 left-1/2 w-100 -translate-x-1/2 bg-blue-500 p-5 text-center">
+                            <p className={'text-xl font-bold'}>
+                                winner: {game.winner}
+                            </p>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 }

@@ -11,7 +11,7 @@ final class Board
     public const int SIZE = 10;
 
     /**
-     * @param array<int, array<int, Square>> $squares
+     * @param  array<int, array<int, Square>>  $squares
      */
     private function validateSquares(array $squares): void
     {
@@ -23,7 +23,7 @@ final class Board
 
         for ($row = 0; $row < self::SIZE; $row++) {
             if (
-                !isset($squares[$row]) ||
+                ! isset($squares[$row]) ||
                 count($squares[$row]) !== self::SIZE
             ) {
                 throw new InvalidArgumentException(
@@ -34,7 +34,7 @@ final class Board
             for ($column = 0; $column < self::SIZE; $column++) {
                 $square = $squares[$row][$column] ?? null;
 
-                if (!$square instanceof Square) {
+                if (! $square instanceof Square) {
                     throw new InvalidArgumentException(
                         "Square {$row}, {$column} is missing.",
                     );
@@ -55,17 +55,19 @@ final class Board
     }
 
     /**
-     * @param array<int, array<int, Square>> $squares
+     * @param  array<int, array<int, Square>>  $squares
      */
     public function __construct(
         private array $squares,
-    )
-    {
+    ) {
         $this->validateSquares($squares);
     }
 
     // create new board class from existing square array
     // static: can be called without creating new object
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromArray(array $data): self
     {
         if (count($data) !== self::SIZE) {
@@ -84,8 +86,8 @@ final class Board
             }
 
             foreach ($rowData as $squareData) {
-                $row = (int)$squareData['row'];
-                $column = (int)$squareData['column'];
+                $row = (int) $squareData['row'];
+                $column = (int) $squareData['column'];
 
                 $piece = null;
                 $pieceData = $squareData['piece'] ?? null;
@@ -93,7 +95,7 @@ final class Board
                 if ($pieceData !== null) {
                     $piece = new Piece(
                         color: ColorType::from($pieceData['color']),
-                        isKing: (bool)$pieceData['isKing'],
+                        isKing: (bool) $pieceData['isKing'],
                     );
                 }
 
@@ -129,7 +131,7 @@ final class Board
         return collect($this->squares)
             ->flatten(1) // remove row from array collection
             ->filter(
-                fn(Square $square) => $square->getPiece()?->getColor() === $playerColor,
+                fn (Square $square) => $square->getPiece()?->getColor() === $playerColor,
             )
             ->count();
     }
@@ -141,8 +143,8 @@ final class Board
     public function toArray(): array
     {
         return array_map(
-            static fn(array $row): array => array_map(
-                static fn(Square $square): array => $square->toArray(),
+            static fn (array $row): array => array_map(
+                static fn (Square $square): array => $square->toArray(),
                 $row,
             ),
             $this->squares,

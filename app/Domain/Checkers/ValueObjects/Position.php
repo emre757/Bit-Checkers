@@ -17,9 +17,8 @@ final readonly class Position
     public function __construct(
         public int $row,
         public int $column,
-    )
-    {
-        if (!self::isWithinBounds($row, $column)) {
+    ) {
+        if (! self::isWithinBounds($row, $column)) {
             throw new \InvalidArgumentException(
                 'Position is outside the board.'
             );
@@ -44,10 +43,8 @@ final readonly class Position
         ];
     }
 
-    /** @param array{
-     * row: int,
-     * column: int
-     * } $data
+    /**
+     * @param  array<string, mixed>  $data
      */
     public static function fromArray(array $data): self
     {
