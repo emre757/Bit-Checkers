@@ -9,6 +9,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 });
 
+Route::get('/games', [GameController::class, 'find'])
+    ->name('games.find');
+
 Route::get('/games/{game}', [GameController::class, 'show'])
     ->name('games.show');
 
@@ -20,4 +23,4 @@ Route::post('/games', [GameController::class, 'store'])
 Route::post('/games/{game}/moves', [GameController::class, 'move'])
     ->name('games.moves.store');
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';
