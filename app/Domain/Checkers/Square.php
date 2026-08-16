@@ -3,32 +3,27 @@
 namespace App\Domain\Checkers;
 
 use App\Domain\Checkers\Enums\ColorType;
+use App\Domain\Checkers\ValueObjects\Position;
 use LogicException;
 
 final class Square
 {
     public function __construct(
-        private int       $row,
-        private int       $column,
-        private ColorType $color,
-        private ?Piece    $piece = null,
+        private readonly Position  $position,
+        private readonly ColorType $color,
+        private ?Piece             $piece = null,
     )
     {
     }
 
-    public function getRow(): int
+    public function getPosition(): Position
     {
-        return $this->row;
+        return $this->position;
     }
 
-    public function getColumn(): int
+    public function getColor(): ColorType
     {
-        return $this->column;
-    }
-
-    public function getColor(): string
-    {
-        return $this->color->value;
+        return $this->color;
     }
 
     public function getPiece(): ?Piece
@@ -84,9 +79,9 @@ final class Square
     public function toArray(): array
     {
         return [
-            'row' => $this->row,
-            'column' => $this->column,
-            'color' => $this->color,
+            'row' => $this->position->row,
+            'column' => $this->position->column,
+            'color' => $this->color->value,
             'piece' => $this->piece?->toArray(),
         ];
     }

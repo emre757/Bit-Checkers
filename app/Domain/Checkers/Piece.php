@@ -20,9 +20,9 @@ final class Piece
         }
     }
 
-    public function getColor(): string
+    public function getColor(): ColorType
     {
-        return $this->color->value;
+        return $this->color;
     }
 
     public function pieceIsKing(): bool
@@ -42,7 +42,7 @@ final class Piece
     public function toArray(): array
     {
         return [
-            'color' => $this->color,
+            'color' => $this->color->value,
             'isKing' => $this->isKing,
         ];
     }

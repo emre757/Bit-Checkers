@@ -1,9 +1,4 @@
-import type { GameData } from '@/types/game-data';
-
-export type BoardPosition = {
-    row: number;
-    column: number;
-};
+import type { GameData, Position } from '@/types/game-data';
 
 function validateSelection(
     game: GameData,
@@ -21,10 +16,10 @@ function validateSelection(
 
 export function handleSquareClick(
     game: GameData,
-    selectedSquare: BoardPosition | null,
+    selectedSquare: Position | null,
     row: number,
     column: number,
-): BoardPosition | null {
+): Position | null {
     const clickedSelectedSquare =
         selectedSquare?.row === row && selectedSquare.column === column;
 

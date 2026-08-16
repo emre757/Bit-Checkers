@@ -3,6 +3,7 @@
 namespace App\Domain\Checkers;
 
 use App\Domain\Checkers\Enums\ColorType;
+use App\Domain\Checkers\ValueObjects\Position;
 use InvalidArgumentException;
 
 final class Board
@@ -12,10 +13,55 @@ final class Board
     /**
      * @param array<int, array<int, Square>> $squares
      */
+    private function validateSquares(array $squares): void
+    {
+        if (count($squares) !== self::SIZE) {
+            throw new InvalidArgumentException(
+                'The board must have exactly 10 rows.',
+            );
+        }
+
+        for ($row = 0; $row < self::SIZE; $row++) {
+            if (
+                !isset($squares[$row]) ||
+                count($squares[$row]) !== self::SIZE
+            ) {
+                throw new InvalidArgumentException(
+                    "Board row {$row} is invalid.",
+                );
+            }
+
+            for ($column = 0; $column < self::SIZE; $column++) {
+                $square = $squares[$row][$column] ?? null;
+
+                if (!$square instanceof Square) {
+                    throw new InvalidArgumentException(
+                        "Square {$row}, {$column} is missing.",
+                    );
+                }
+
+                $position = $square->getPosition();
+
+                if (
+                    $position->row !== $row ||
+                    $position->column !== $column
+                ) {
+                    throw new InvalidArgumentException(
+                        "Square {$row}, {$column} has the wrong position.",
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array<int, array<int, Square>> $squares
+     */
     public function __construct(
         private array $squares,
     )
     {
+        $this->validateSquares($squares);
     }
 
     // create new board class from existing square array
@@ -24,7 +70,7 @@ final class Board
     {
         if (count($data) !== self::SIZE) {
             throw new InvalidArgumentException(
-                'The board must have exactly 10 rows.'
+                'The board must have exactly 10 rows.',
             );
         }
 
@@ -52,8 +98,7 @@ final class Board
                 }
 
                 $squares[$row][$column] = new Square(
-                    row: $row,
-                    column: $column,
+                    position: new Position($row, $column),
                     color: ColorType::from($squareData['color']),
                     piece: $piece,
                 );
@@ -63,15 +108,12 @@ final class Board
         return new self($squares);
     }
 
-    public function getSquare(int $row, int $column): Square
+    public function getSquare(Position $position): Square
     {
-        if (!isset($this->squares[$row][$column])) {
-            throw new InvalidArgumentException(
-                "Square {$row}, {$column} does not exist."
+        return $this->squares[$position->row][$position->column]
+            ?? throw new InvalidArgumentException(
+                "Square {$position->row}, {$position->column} does not exist.",
             );
-        }
-
-        return $this->squares[$row][$column];
     }
 
     /**

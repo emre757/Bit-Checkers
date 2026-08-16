@@ -14,6 +14,19 @@ export type Square = {
 
 export type Board = Square[][];
 
+export type Position = {
+    row: number;
+    column: number;
+};
+
+export type LegalMove = {
+    from: Position;
+    path: Position[];
+    captures: Position[];
+};
+
+export type LegalMovesData = LegalMove[];
+
 export type GameData = {
     id: number;
     current_player: string;

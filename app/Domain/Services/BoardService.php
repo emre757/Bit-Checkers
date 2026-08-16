@@ -6,6 +6,7 @@ use App\Domain\Checkers\Board;
 use App\Domain\Checkers\Enums\ColorType;
 use App\Domain\Checkers\Piece;
 use App\Domain\Checkers\Square;
+use App\Domain\Checkers\ValueObjects\Position;
 
 final class BoardService
 {
@@ -20,8 +21,7 @@ final class BoardService
                 $piece = $this->createStartingPiece($row, $squareColor);
 
                 $squares[$row][$column] = new Square(
-                    row: $row,
-                    column: $column,
+                    position: new Position($row, $column),
                     color: $squareColor,
                     piece: $piece,
                 );
