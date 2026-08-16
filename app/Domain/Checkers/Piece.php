@@ -10,14 +10,26 @@ final class Piece
     // private props because it shouldnt be changed by outside codes
     public function __construct(
         private readonly ColorType $color,
-        private bool $isKing,
-    ) {
-        if (! in_array($color, [
+        private bool               $isKing,
+        private bool               $pendingRemoval = false,
+    )
+    {
+        if (!in_array($color, [
             ColorType::Light,
             ColorType::Dark,
         ], true)) {
             throw new InvalidArgumentException('Invalid piece color.');
         }
+    }
+
+    public function markCaptured(): void
+    {
+        $this->pendingRemoval = true;
+    }
+
+    public function isCaptured(): bool
+    {
+        return $this->pendingRemoval;
     }
 
     public function getColor(): ColorType
@@ -39,7 +51,8 @@ final class Piece
     /**
      * @return array{
      *     color: string,
-     *     isKing: bool
+     *     isKing: bool,
+     *     pendingRemoval: bool
      * }
      */
     public function toArray(): array
@@ -47,6 +60,7 @@ final class Piece
         return [
             'color' => $this->color->value,
             'isKing' => $this->isKing,
+            'pendingRemoval' => $this->pendingRemoval,
         ];
     }
 }

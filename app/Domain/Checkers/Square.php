@@ -9,10 +9,12 @@ use LogicException;
 final class Square
 {
     public function __construct(
-        private readonly Position $position,
+        private readonly Position  $position,
         private readonly ColorType $color,
-        private ?Piece $piece = null,
-    ) {}
+        private ?Piece             $piece = null,
+    )
+    {
+    }
 
     public function getPosition(): Position
     {
@@ -37,7 +39,7 @@ final class Square
 
     public function placePiece(Piece $piece): void
     {
-        if (! $this->isPlayable()) {
+        if (!$this->isPlayable()) {
             throw new LogicException(
                 'A piece cannot be placed on a light square.'
             );

@@ -3,6 +3,7 @@ export type Color = 'light' | 'dark';
 export type Piece = {
     color: Color;
     isKing: boolean;
+    pendingRemoval: boolean;
 };
 
 export type Square = {
