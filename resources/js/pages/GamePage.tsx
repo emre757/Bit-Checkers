@@ -45,7 +45,6 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
             : undefined;
 
         if (clickedMove) {
-            console.log('clicked move:', clickedMove);
             router.post(
                 `/games/${game.id}/moves`,
                 {
@@ -70,11 +69,11 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
             <Button asChild className="mt-5 ml-5">
                 <Link href="/">Go back home</Link>
             </Button>
-            <div className={'flex flex-col items-center'}>
+            <div className="flex flex-col items-center px-4">
                 <p>Game: {game.id}</p>
                 <p>Current player: {game.current_player}</p>
                 <p>Status: {game.status}</p>
-                <div className="relative mt-5 grid w-fit grid-cols-10 gap-0.5">
+                <div className="relative mt-5 grid w-full max-w-164 grid-cols-10 gap-0.5">
                     {game.board.flat().map((square) => {
                         const isSelected =
                             selectedSquare?.row === square.row &&
@@ -103,7 +102,7 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
                         );
                     })}
                     {!active && (
-                        <div className="absolute top-1/2 left-1/2 w-100 -translate-x-1/2 bg-blue-500 p-5 text-center">
+                        <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 bg-blue-500 p-5 text-center">
                             <p className={'text-xl font-bold'}>
                                 winner: {game.winner}
                             </p>

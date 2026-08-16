@@ -28,7 +28,7 @@ export default function CheckerBox({
             type="button"
             onClick={onClick}
             aria-pressed={selected}
-            className={`flex size-16 items-center justify-center ${backgroundColor}`}
+            className={`flex aspect-square w-full min-w-0 items-center justify-center ${backgroundColor}`}
         >
             {piece && <CheckerPiece piece={piece} />}
 

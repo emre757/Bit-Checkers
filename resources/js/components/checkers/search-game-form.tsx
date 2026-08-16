@@ -3,7 +3,7 @@ import type { FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Field,
-    FieldDescription,
+    FieldError,
     FieldGroup,
     FieldLabel,
 } from '@/components/ui/field';
@@ -37,9 +37,7 @@ export function SearchGameForm() {
                         required
                     />
 
-                    {errors.gameId && (
-                        <FieldDescription>{errors.gameId}</FieldDescription>
-                    )}
+                    {errors.gameId && <FieldError>{errors.gameId}</FieldError>}
                 </Field>
 
                 <Button type="submit" disabled={processing}>
