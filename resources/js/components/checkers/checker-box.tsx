@@ -5,16 +5,20 @@ import type { Piece } from '@/types/game-data';
 type CheckerBoxProps = {
     color: 'light' | 'black';
     piece: Piece | null;
+    ariaLabel: string;
     selected?: boolean;
     legal?: boolean;
+    disabled?: boolean;
     onClick?: () => void;
 };
 
 export default function CheckerBox({
     color,
     piece,
+    ariaLabel,
     selected = false,
     legal = false,
+    disabled = false,
     onClick,
 }: CheckerBoxProps) {
     const backgroundColor = selected
@@ -27,8 +31,10 @@ export default function CheckerBox({
         <button
             type="button"
             onClick={onClick}
+            aria-label={ariaLabel}
             aria-pressed={selected}
             className={`flex aspect-square w-full min-w-0 items-center justify-center ${backgroundColor}`}
+            disabled={disabled}
         >
             {piece && <CheckerPiece piece={piece} />}
 

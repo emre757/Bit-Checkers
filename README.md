@@ -3,6 +3,9 @@
 The game automatically saves after every validated move, so players do not need to manually save and cannot lose
 progress by accident.
 
+The game has basic screen reader support:
+board squares use aria labels to describe coordinates, piece type, and selection state.
+
 # Docker
 
 Use laravel sail for local development.

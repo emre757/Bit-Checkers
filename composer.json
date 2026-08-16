@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/react-starter-kit",
+    "name": "emre757/bit-checkers",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Local multiplayer checkers game based on international rules. Made with Laravel, React & Inertia.",
     "keywords": [
         "laravel",
         "framework"
@@ -99,8 +99,7 @@
         "laravel": {
             "dont-discover": [],
             "installer": {
-                "post-create-project": [
-                ]
+                "post-create-project": []
             }
         }
     },

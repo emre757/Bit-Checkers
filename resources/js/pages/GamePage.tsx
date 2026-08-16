@@ -1,8 +1,9 @@
-import { Link, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import CheckerBox from '@/components/checkers/checker-box';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { handleSquareClick } from '@/lib/board-client';
+import { createAriaLabel, handleSquareClick } from '@/lib/board-client';
 import type { GameData, LegalMovesData, Position } from '@/types/game-data';
 
 type GamePageProps = {
@@ -11,6 +12,8 @@ type GamePageProps = {
 };
 
 export default function GamePage({ game, legalMoves }: GamePageProps) {
+    const [moveError, setMoveError] = useState<string | null>(null);
+    const [isSaving, setIsSaving] = useState<boolean>(false);
     const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
     const active = game.status === 'active';
 
@@ -52,7 +55,38 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
                     destination: clickedMove.destination,
                 },
                 {
+                    onStart: () => {
+                        setIsSaving(true);
+                        setMoveError(null);
+                    },
+
                     onSuccess: () => setSelectedSquare(null),
+
+                    onError: (errors) => {
+                        const firstError = Object.values(errors)[0];
+
+                        setMoveError(
+                            typeof firstError === 'string'
+                                ? firstError
+                                : 'The move was rejected.',
+                        );
+                    },
+
+                    onHttpException: () => {
+                        setMoveError(
+                            'The server failed to save the move, try again.',
+                        );
+
+                        return false;
+                    },
+
+                    onNetworkError: () => {
+                        setMoveError('Connection is lost: move was not saved.');
+
+                        return false;
+                    },
+
+                    onFinish: () => setIsSaving(false),
                 },
             );
 
@@ -66,13 +100,30 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
 
     return (
         <>
+            <Head title={`Game ${game.id}`} />
             <Button asChild className="mt-5 ml-5">
                 <Link href="/">Go back home</Link>
             </Button>
             <div className="flex flex-col items-center px-4">
-                <p>Game: {game.id}</p>
-                <p>Current player: {game.current_player}</p>
-                <p>Status: {game.status}</p>
+                <div className="flex flex-wrap gap-2">
+                    <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                        Game ID: {game.id}
+                    </Badge>
+                    <Badge className="bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+                        Player Turn: {game.current_player}
+                    </Badge>{' '}
+                    <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                        Game Status: {game.status}
+                    </Badge>
+                </div>
+                {moveError && (
+                    <Badge
+                        className="my-5 w-full max-w-sm px-3 py-2 text-center text-lg leading-snug wrap-break-word whitespace-normal"
+                        variant={'destructive'}
+                    >
+                        {moveError}
+                    </Badge>
+                )}
                 <div className="relative mt-5 grid w-full max-w-164 grid-cols-10 gap-0.5">
                     {game.board.flat().map((square) => {
                         const isSelected =
@@ -92,8 +143,16 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
                                     square.color === 'dark' ? 'black' : 'light'
                                 }
                                 piece={square.piece}
+                                ariaLabel={createAriaLabel(
+                                    square.row,
+                                    square.column,
+                                    isSelected,
+                                    square.piece?.color,
+                                    square.piece?.isKing,
+                                )}
                                 selected={isSelected}
                                 legal={isLegalDestination}
+                                disabled={isSaving || !active}
                                 onClick={() =>
                                     active &&
                                     handleBoxClick(square.row, square.column)

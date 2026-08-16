@@ -13,7 +13,7 @@ export default function CheckerPiece({ piece }: CheckerPieceProps) {
     return (
         <span
             aria-hidden="true"
-            className={`flex size-2/3 items-center justify-center rounded-full border-2 shadow-md sm:border-4 ${colorClasses} ${piece.pendingRemoval && 'opacity-50'}`}
+            className={`flex size-2/3 items-center justify-center rounded-full border-2 shadow-md sm:border-4 ${colorClasses} ${piece.pendingRemoval ? 'opacity-50' : ''}`}
         >
             {piece.isKing && (
                 <span className="text-xs font-bold sm:text-xl">♛</span>
