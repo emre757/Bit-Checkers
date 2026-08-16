@@ -1,9 +1,25 @@
+export type Color = 'light' | 'dark';
+
+export type Piece = {
+    color: Color;
+    isKing: boolean;
+};
+
+export type Square = {
+    row: number;
+    column: number;
+    color: Color;
+    piece: Piece | null;
+};
+
+export type Board = Square[][];
+
 export type GameData = {
     id: number;
     current_player: string;
     status: string;
     winner: string | null;
-    board: unknown[];
+    board: Board;
     created_at: string;
     updated_at: string;
 };
