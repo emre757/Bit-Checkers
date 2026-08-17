@@ -6,26 +6,46 @@ progress by accident.
 The game has basic screen reader support:
 board squares use aria labels to describe coordinates, piece type, and selection state.
 
-# Docker
+### Requirements
 
-Use laravel sail for local development.
+- Docker desktop (WSL2 integration enabled)
+- PHP 8.3+
+- Composer
 
-1. **Start the Docker containers:**
+**Node.js and mySQL run inside laravel sail.**
+
+# Installation
+
+Install PHP dependencies, create `.env`, and generate the application key:
 
 ```bash
-sail up -d
+composer setup
 ```
 
-**Start the Vite development server:**
+Start docker and wait until everything is ready:
 
 ```bash
-sail npm run dev
+./vendor/bin/sail up
 ```
 
-**The application runs at:**
+Database migration, npm dependencies & npm build with custom composer script:
 
-http://localhost (port 80)
+```bash
+composer setup:sail
+```
 
-**To stop the containers:**
+Website should now be active at: http://localhost (port 80)
 
-sail down
+#### Starting project in future after installation
+
+```bash
+./vendor/bin/sail up
+
+./vendor/bin/sail npm run dev
+```
+
+### Stopping project
+
+```bash
+./vendor/bin/sail down
+```
