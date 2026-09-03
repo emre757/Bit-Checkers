@@ -19,7 +19,9 @@ final readonly class GameStateMapper
             status: $game->status,
             board: Board::fromArray($game->board),
             winner: $game->winner,
-            forcedCaptureFrom: Position::fromArray($game->forced_capture_from) ?? null,
+            forcedCaptureFrom: $game->forced_capture_from !== null
+                ? Position::fromArray($game->forced_capture_from)
+                : null,
         );
     }
 }
