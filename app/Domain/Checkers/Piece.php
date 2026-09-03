@@ -3,7 +3,6 @@
 namespace App\Domain\Checkers;
 
 use App\Domain\Checkers\Enums\ColorType;
-use InvalidArgumentException;
 
 final class Piece
 {
@@ -14,12 +13,6 @@ final class Piece
         private bool               $pendingRemoval = false,
     )
     {
-        if (!in_array($color, [
-            ColorType::Light,
-            ColorType::Dark,
-        ], true)) {
-            throw new InvalidArgumentException('Invalid piece color.');
-        }
     }
 
     public function markCaptured(): void

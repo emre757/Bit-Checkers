@@ -34,7 +34,7 @@ final class Square
     public function isPlayable(): bool
     {
         // because pieces can stay on one square only anyways
-        return $this->color == ColorType::Dark;
+        return $this->color === ColorType::Dark;
     }
 
     public function placePiece(Piece $piece): void

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Domain\Checkers\Board;
 use App\Domain\Checkers\ValueObjects\Position;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -23,14 +24,16 @@ class MovePieceRequest extends FormRequest
      */
     public function rules(): array
     {
+        $bounds = 'between:0,' . Board::SIZE - 1;
+
         return [
             'from' => ['required', 'array', 'array:row,column'],
-            'from.column' => ['required', 'integer', 'between:0,9'],
-            'from.row' => ['required', 'integer', 'between:0,9'],
+            'from.column' => ['required', 'integer', $bounds],
+            'from.row' => ['required', 'integer', $bounds],
 
             'destination' => ['required', 'array', 'array:row,column'],
-            'destination.column' => ['required', 'integer', 'between:0,9'],
-            'destination.row' => ['required', 'integer', 'between:0,9'],
+            'destination.column' => ['required', 'integer', $bounds],
+            'destination.row' => ['required', 'integer', $bounds],
         ];
     }
 

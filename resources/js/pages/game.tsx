@@ -4,6 +4,7 @@ import CheckerBox from '@/components/checkers/checker-box';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { createAriaLabel, handleSquareClick } from '@/lib/board-client';
+import { store } from '@/routes/games/moves';
 import type { GameData, LegalMovesData, Position } from '@/types/game-data';
 
 type GamePageProps = {
@@ -11,7 +12,7 @@ type GamePageProps = {
     legalMoves: LegalMovesData;
 };
 
-export default function GamePage({ game, legalMoves }: GamePageProps) {
+export default function Game({ game, legalMoves }: GamePageProps) {
     const [moveError, setMoveError] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
@@ -49,7 +50,7 @@ export default function GamePage({ game, legalMoves }: GamePageProps) {
 
         if (clickedMove) {
             router.post(
-                `/games/${game.id}/moves`,
+                store(game.id).url,
                 {
                     from: clickedMove.from,
                     destination: clickedMove.destination,

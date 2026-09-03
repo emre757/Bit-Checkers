@@ -5,8 +5,6 @@
 namespace App\Mappers;
 
 use App\Domain\Checkers\Board;
-use App\Domain\Checkers\Enums\BoardStatusType;
-use App\Domain\Checkers\Enums\ColorType;
 use App\Domain\Checkers\GameState;
 use App\Domain\Checkers\ValueObjects\Position;
 use App\Models\Game;
@@ -17,13 +15,11 @@ final readonly class GameStateMapper
     {
         return new GameState(
             gameId: $game->id,
-            turn: ColorType::from($game->current_player),
-            status: BoardStatusType::from($game->status),
+            turn: $game->current_player,
+            status: $game->status,
             board: Board::fromArray($game->board),
-            winner: $game->winner !== null
-                ? ColorType::from($game->winner)
-                : null,
-            forcedCaptureFrom: $game->forced_capture_from !== null ? Position::fromArray($game->forced_capture_from) : null,
+            winner: $game->winner,
+            forcedCaptureFrom: Position::fromArray($game->forced_capture_from) ?? null,
         );
     }
 }

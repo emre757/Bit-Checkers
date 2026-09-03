@@ -1,5 +1,7 @@
 export type Color = 'light' | 'dark';
 
+export type BoardStatus = 'active' | 'inactive';
+
 export type Piece = {
     color: Color;
     isKing: boolean;
@@ -30,9 +32,9 @@ export type LegalMovesData = LegalMove[];
 
 export type GameData = {
     id: number;
-    current_player: string;
-    status: string;
-    winner: string | null;
+    current_player: Color;
+    status: BoardStatus;
+    winner: Color | null;
     board: Board;
     created_at: string;
     updated_at: string;

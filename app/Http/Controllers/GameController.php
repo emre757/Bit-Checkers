@@ -26,7 +26,7 @@ final class GameController extends Controller
     {
         $gameState = GameStateMapper::fromGame($game);
 
-        return Inertia::render('GamePage', [
+        return Inertia::render('game', [
             'game' => $game,
             'legalMoves' => LegalMoveGenerator::toArray($gameState->legalMoves()),
         ]);
@@ -43,7 +43,12 @@ final class GameController extends Controller
     public function move(MovePieceRequest $request, Game $game): RedirectResponse
     {
         $gameState = GameStateMapper::fromGame($game);
-        $gameState->makeMove($request->fromPosition(), $request->destinationPosition());
+
+        try {
+            $gameState->makeMove($request->fromPosition(), $request->destinationPosition());
+        } catch (\DomainException $exception) {
+            return back()->withErrors(['move' => $exception->getMessage()]);
+        }
 
         $this->saveGameAction->execute($game, $gameState);
 

@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import { SearchGameForm } from '@/components/checkers/search-game-form';
+import { store } from '@/routes/games';
 
 export default function Home() {
     return (
@@ -15,7 +16,7 @@ export default function Home() {
                 </div>
 
                 <Link
-                    href="/games"
+                    href={store.url()}
                     method="post"
                     as="button"
                     type="button"

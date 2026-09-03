@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Domain\Checkers\Enums\BoardStatusType;
+use App\Domain\Checkers\Enums\ColorType;
 use Illuminate\Database\Eloquent\Model;
 
 class Game extends Model
@@ -14,9 +16,12 @@ class Game extends Model
         'forced_capture_from',
     ];
 
-    public function casts(): array
+    protected function casts(): array
     {
         return [
+            'current_player' => ColorType::class,
+            'status' => BoardStatusType::class,
+            'winner' => ColorType::class,
             'board' => 'array',
             'forced_capture_from' => 'array',
         ];

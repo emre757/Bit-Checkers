@@ -2,6 +2,8 @@
 
 namespace App\Domain\Checkers\Enums;
 
+use App\Domain\Checkers\Board;
+
 enum ColorType: string
 {
     case Light = 'light';
@@ -28,8 +30,8 @@ enum ColorType: string
     public function isPromotionRow(int $row): bool
     {
         return $row === match ($this) {
-            self::Light => 0,
-            self::Dark => 9,
-        };
+                self::Light => 0,
+                self::Dark => Board::SIZE - 1,
+            };
     }
 }

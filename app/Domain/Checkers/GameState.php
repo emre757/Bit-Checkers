@@ -115,6 +115,8 @@ final class GameState
 
         if ($this->board->countPlayerPieces($this->turn) <= 0) {
             $this->declareWinner($this->turn->opponent());
+
+            return;
         }
 
         // if opponent has any moves left, if not then player wins

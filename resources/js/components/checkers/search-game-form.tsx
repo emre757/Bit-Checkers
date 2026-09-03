@@ -8,6 +8,7 @@ import {
     FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { find } from '@/routes/games';
 
 export function SearchGameForm() {
     const { data, setData, get, errors, processing } = useForm({
@@ -16,7 +17,7 @@ export function SearchGameForm() {
 
     function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        get('/games', {
+        get(find.url(), {
             preserveState: true,
         });
     }
