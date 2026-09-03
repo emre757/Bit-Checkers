@@ -5,10 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'home')->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-});
-
 Route::get('/games', [GameController::class, 'find'])
     ->name('games.find');
 

@@ -1,6 +1,6 @@
 <?php
 
-// turn database into game state (new game, load game etc)
+// turn database into game state (new game, load game, etc.)
 
 namespace App\Mappers;
 
