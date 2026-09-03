@@ -22,5 +22,3 @@ Route::post('/games', [GameController::class, 'store'])
 // Due to project being small, will be using game controller as it would otherwise make it more complicated than needed
 Route::post('/games/{game}/moves', [GameController::class, 'move'])
     ->name('games.moves.store');
-
-require __DIR__ . '/settings.php';
