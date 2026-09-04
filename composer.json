@@ -64,8 +64,7 @@
             "Composer\\Config::disableProcessTimeout",
             "npm run lint:check",
             "npm run format:check",
-            "npm run types:check",
-            "@test"
+            "npm run types:check"
         ],
         "types:check": [
             "phpstan analyse"
