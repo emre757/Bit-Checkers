@@ -30,8 +30,8 @@ enum ColorType: string
     public function isPromotionRow(int $row): bool
     {
         return $row === match ($this) {
-                self::Light => 0,
-                self::Dark => Board::SIZE - 1,
-            };
+            self::Light => 0,
+            self::Dark => Board::SIZE - 1,
+        };
     }
 }

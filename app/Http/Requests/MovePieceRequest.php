@@ -24,7 +24,7 @@ class MovePieceRequest extends FormRequest
      */
     public function rules(): array
     {
-        $bounds = 'between:0,' . Board::SIZE - 1;
+        $bounds = 'between:0,'.Board::SIZE - 1;
 
         return [
             'from' => ['required', 'array', 'array:row,column'],

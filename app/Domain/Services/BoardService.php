@@ -34,18 +34,16 @@ final class BoardService
     private function determineSquareColor(
         int $row,
         int $column,
-    ): ColorType
-    {
+    ): ColorType {
         return ($row + $column) % 2 === 1
             ? ColorType::Dark
             : ColorType::Light;
     }
 
     private function createStartingPiece(
-        int       $row,
+        int $row,
         ColorType $squareColor,
-    ): ?Piece
-    {
+    ): ?Piece {
         if ($squareColor !== ColorType::Dark) {
             return null;
         }
