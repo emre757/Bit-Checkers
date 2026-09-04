@@ -5,10 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'home')->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-});
-
 Route::get('/games', [GameController::class, 'find'])
     ->name('games.find');
 
@@ -22,5 +18,3 @@ Route::post('/games', [GameController::class, 'store'])
 // Due to project being small, will be using game controller as it would otherwise make it more complicated than needed
 Route::post('/games/{game}/moves', [GameController::class, 'move'])
     ->name('games.moves.store');
-
-require __DIR__ . '/settings.php';

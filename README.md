@@ -1,15 +1,33 @@
 # Bit Checkers
 
-The game automatically saves after every validated move, so players do not need to manually save and cannot lose
-progress by accident.
+A local multiplayer game based on international checkers, built with Laravel, React, TypeScript, and Inertia.
+The server validates all moves and automatically saves the game after every accepted move.
 
-The game has basic screen reader support:
-board squares use aria labels to describe coordinates, piece type, and selection state.
+## Features
 
-### Known limitations
+- Responsive 10×10 international checkers board
+- Required captures, multi-captures, backward captures for pieces
+- Server-side move validation, with legal destinations displayed in the front-end
+- Automatic game saves and the ability to continue a game by ID
+- Basic screen reader support through labels describing square coordinates, pieces, and selection state
 
-The following are decisions made on purpose to deliver the project in a short
-time.
+## Tech
+
+- PHP 8.3, Laravel 13, and MySQL
+- React 19, TypeScript, Inertia, Tailwind CSS, and Vite
+- Laravel Sail
+- PHPUnit, PHPStan, Pint, ESLint, and Prettier for quality checks
+
+## Architecture
+
+Game rules are organized in domain classes under `app/Domain/Checkers`. The backend
+deserializes the saved board into `GameState`, calculates legal moves on the server, validates the requested move, and
+saves the state. The React client is responsible for interaction and presentation, but is not trusted to
+decide whether a move is valid.
+
+## Known limitations
+
+The following are decisions made on purpose to deliver the project in a short time.
 
 - **The maximum capture rule is not applied.** International rules require you to play the
   capture move that takes the most pieces. This game requires only that you *must* capture when a
@@ -23,7 +41,7 @@ time.
 - **The game logic is not covered by automated tests.** The CI runs only basic tests such as lint checking. There are no
   automated tests for game logic.
 
-### Requirements
+## Requirements
 
 - Docker desktop (WSL2 integration enabled)
 - PHP 8.3+
@@ -31,7 +49,7 @@ time.
 
 **Node.js and mySQL run inside laravel sail.**
 
-# Installation
+## Installation
 
 Install PHP dependencies, create `.env`, and generate the application key:
 
@@ -51,9 +69,9 @@ Database migration, npm dependencies & npm build with custom composer script:
 composer setup:sail
 ```
 
-Website should now be active at: http://localhost (port 80)
+Website should now be available on: http://localhost
 
-#### Starting project in future after installation
+### Starting the project after installation
 
 ```bash
 ./vendor/bin/sail up

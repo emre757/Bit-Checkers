@@ -6,8 +6,8 @@ final readonly class Move
 {
     public function __construct(
         public Position $from,
-        public Position $destination, // array of positions due to multi conquer
-        public ?Position $capture, // array of pieces captured when performing
+        public Position $destination,
+        public ?Position $capture, // position of piece captured when performing move
     ) {}
 
     // meant to validate client input; if it matches a valid move

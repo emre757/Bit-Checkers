@@ -56,7 +56,7 @@ final readonly class LegalMoveGenerator
     {
         $squarePiece = $square->getPiece();
 
-        if (!$squarePiece || $squarePiece->getColor() !== $currentPlayer || $squarePiece->isCaptured()) {
+        if (! $squarePiece || $squarePiece->getColor() !== $currentPlayer || $squarePiece->isCaptured()) {
             return [];
         }
 
@@ -99,7 +99,7 @@ final readonly class LegalMoveGenerator
                     $landingRow = $nextRow + $rowStep;
                     $landingColumn = $nextColumn + $columnStep;
 
-                    if (!Position::isWithinBounds($landingRow, $landingColumn)) {
+                    if (! Position::isWithinBounds($landingRow, $landingColumn)) {
                         break;
                     }
 
@@ -153,7 +153,7 @@ final readonly class LegalMoveGenerator
                 $nextColumn = $squarePosition->column + $columnStep;
 
                 // validate position
-                if (!Position::isWithinBounds($nextRow, $nextColumn)) {
+                if (! Position::isWithinBounds($nextRow, $nextColumn)) {
                     continue;
                 }
 
@@ -173,7 +173,7 @@ final readonly class LegalMoveGenerator
                     $landingRow = $nextRow + $rowStep;
                     $landingColumn = $nextColumn + $columnStep;
 
-                    if (!Position::isWithinBounds($landingRow, $landingColumn)) {
+                    if (! Position::isWithinBounds($landingRow, $landingColumn)) {
                         continue;
                     }
 
@@ -226,7 +226,7 @@ final readonly class LegalMoveGenerator
     }
 
     /**
-     * @param list<Move> $moves
+     * @param  list<Move>  $moves
      * @return array<int, array{
      * from: array{row: int, column: int},
      * destination: array{row: int, column: int},
@@ -235,6 +235,6 @@ final readonly class LegalMoveGenerator
      */
     public static function toArray(array $moves): array
     {
-        return collect($moves)->map(fn($move) => $move->toArray())->all();
+        return collect($moves)->map(fn ($move) => $move->toArray())->all();
     }
 }

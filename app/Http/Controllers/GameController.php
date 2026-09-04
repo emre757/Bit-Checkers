@@ -16,11 +16,9 @@ use Inertia\Response;
 final class GameController extends Controller
 {
     public function __construct(
-        private readonly GameService    $gameService,
+        private readonly GameService $gameService,
         private readonly SaveGameAction $saveGameAction,
-    )
-    {
-    }
+    ) {}
 
     public function show(Game $game): Response
     {

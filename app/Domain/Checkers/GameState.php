@@ -11,15 +11,13 @@ use App\Domain\Checkers\ValueObjects\Position;
 final class GameState
 {
     public function __construct(
-        public readonly int    $gameId,
-        public ColorType       $turn,
+        public readonly int $gameId,
+        public ColorType $turn,
         public BoardStatusType $status,
-        public Board           $board,
-        public ?ColorType      $winner = null,
-        public ?Position       $forcedCaptureFrom = null,
-    )
-    {
-    }
+        public Board $board,
+        public ?ColorType $winner = null,
+        public ?Position $forcedCaptureFrom = null,
+    ) {}
 
     private function declareWinner(ColorType $winningPlayer): void
     {
@@ -58,7 +56,7 @@ final class GameState
         $legalMove = null;
 
         foreach ($this->legalMoves() as $movePossibility) {
-            if (!$movePossibility->matches($from, $destination)) {
+            if (! $movePossibility->matches($from, $destination)) {
                 continue;
             }
 
@@ -94,7 +92,7 @@ final class GameState
             $forcedCaptures = LegalMoveGenerator::captureMovesForSquare($this->board, $this->turn, $endSquare);
 
             // skip switching turns
-            if (!empty($forcedCaptures)) {
+            if (! empty($forcedCaptures)) {
                 $this->forcedCaptureFrom = $endSquare->getPosition();
 
                 return;
@@ -102,7 +100,7 @@ final class GameState
         }
 
         // only crown at end of turn
-        if (!$piece->isKing() && $piece->getColor()->isPromotionRow($endSquare->getPosition()->row)) {
+        if (! $piece->isKing() && $piece->getColor()->isPromotionRow($endSquare->getPosition()->row)) {
             $piece->crown();
         }
 

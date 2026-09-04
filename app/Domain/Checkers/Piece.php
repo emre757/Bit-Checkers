@@ -9,11 +9,9 @@ final class Piece
     // private props because it shouldnt be changed by outside codes
     public function __construct(
         private readonly ColorType $color,
-        private bool               $isKing,
-        private bool               $pendingRemoval = false,
-    )
-    {
-    }
+        private bool $isKing,
+        private bool $pendingRemoval = false,
+    ) {}
 
     public function markCaptured(): void
     {
